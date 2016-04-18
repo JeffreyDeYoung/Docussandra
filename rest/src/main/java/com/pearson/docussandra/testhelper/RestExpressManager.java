@@ -1,5 +1,5 @@
 
-package testhelper;
+package com.pearson.docussandra.testhelper;
 
 import com.pearson.docussandra.Main;
 import java.io.IOException;
