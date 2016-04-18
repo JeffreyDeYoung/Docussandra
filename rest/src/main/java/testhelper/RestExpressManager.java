@@ -85,10 +85,10 @@ public class RestExpressManager
             {
                 String[] params = new String[1];
                 params[0] = "local_test";
-                server = Main.initializeServer(params);
+                server = Main.initializeServer(params, null);
             } else
             {
-                server = Main.initializeServer(new String[0]);
+                server = Main.initializeServer(new String[0], null);
             }
             restExpressRunning = true;
         }

@@ -74,7 +74,7 @@ public class Main
     {
         try
         {
-            RestExpress server = initializeServer(args);
+            RestExpress server = initializeServer(args, null);
             logger.info("Server started up on port: " + server.getPort() + "!");
             server.awaitShutdown();
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
@@ -98,12 +98,15 @@ public class Main
      * @param args Command line arguments. Should be one parameter with either
      * an environment or a path to a URL with the proper configuration via a
      * REST GET.
+     * @param overrideSeeds If you wish to override the otherwise set Cassandra
+     * seeds for testing purposes. Pass null if you don't want to override (most
+     * of the time.)
      * @return A running RestExpress REST server.
      * @throws IOException
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    public static RestExpress initializeServer(String[] args) throws IOException, IllegalAccessException, InstantiationException
+    public static RestExpress initializeServer(String[] args, String overrideSeeds) throws IOException, IllegalAccessException, InstantiationException
     {
         //args = new String[]{"http://docussandra-dev-webw-1.openclass.com:8080/config/A"};
         RestExpress.setSerializationProvider(new SerializationProvider());
@@ -118,6 +121,13 @@ public class Main
         }
         Configuration config = loadEnvironment(args);
         logger.info("-----Attempting to start up Docussandra server for version: " + config.getProjectVersion() + "-----");
+                boolean initDb = true;
+        if (overrideSeeds != null)
+        {//if we are overriding our seeds list for testing purposes.
+            config.overrideSeeds(overrideSeeds);//this will also override the port back to default
+            initDb = false;
+        }
+        config.initialize(initDb);//make the configuration object ready to use
         RestExpress server = new RestExpress()
                 .setName(config.getProjectName(SERVICE_NAME))
                 .setBaseUrl(config.getBaseUrl())
