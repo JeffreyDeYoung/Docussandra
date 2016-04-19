@@ -169,18 +169,6 @@ public class Configuration
         properties.setProperty("cassandra.port", "9042");
     }
 
-    /**
-     * An option, prior to calling initialize(), you can override the seed list
-     * for testing purposes.
-     *
-     * @param seeds Cassandra seeds that you wish to override with.
-     */
-    public void overrideSeeds(String seeds)
-    {
-        properties.setProperty("cassandra.contactPoints", seeds);
-        properties.setProperty("cassandra.port", "9042");
-    }
-
     public int getPort()
     {
         return port;
