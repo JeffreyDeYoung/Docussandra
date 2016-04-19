@@ -58,7 +58,7 @@ import static org.restexpress.Flags.Auth.PUBLIC_ROUTE;
  */
 public class Main
 {
-    
+
     private static final String SERVICE_NAME = "Docussandra API";
     private static final Logger logger = LoggerFactory.getLogger(SERVICE_NAME);
 
@@ -121,7 +121,7 @@ public class Main
         }
         Configuration config = loadEnvironment(args);
         logger.info("-----Attempting to start up Docussandra server for version: " + config.getProjectVersion() + "-----");
-                boolean initDb = true;
+        boolean initDb = true;
         if (overrideSeeds != null)
         {//if we are overriding our seeds list for testing purposes.
             config.overrideSeeds(overrideSeeds);//this will also override the port back to default
@@ -137,18 +137,18 @@ public class Main
                 .addPreprocessor(new RequestApplicationJsonPreprocessor())
                 .addPreprocessor(new RequestXAuthCheck())
                 .setMaxContentSize(6000000);
-        
+
         new VersionPlugin(config.getProjectVersion())
                 .register(server);
-        
+
         new SwaggerPlugin()
                 .register(server);
-        
+
         Routes.define(config, server);
         Relationships.define(server);
         configurePlugins(config, server);
         mapExceptions(server);
-        
+
         if (config.getPort() == 0)
         {//no port? calculate it off of the version number
             server.setPort(calculatePort(config.getProjectVersion()));
@@ -192,7 +192,7 @@ public class Main
         {
             number += "0"; //if less than three digits long, pad with zeros
         }
-        
+
         if (snapshot)
         {
             number += "1";//snapshots have +1 to indicate that they are snapshots
@@ -214,27 +214,27 @@ public class Main
     private static void configurePlugins(Configuration config, RestExpress server)
     {
         configureMetrics(config, server);
-        
+
         new HyperExpressPlugin(Linkable.class)
                 .register(server);
-        
+
         new CorsHeaderPlugin("*")
                 .flag(PUBLIC_ROUTE)
                 .allowHeaders(CONTENT_TYPE, ACCEPT, LOCATION)
                 .exposeHeaders(LOCATION)
                 .register(server);
     }
-    
+
     private static void configureMetrics(Configuration config, RestExpress server)
     {
         MetricsConfig mc = config.getMetricsConfig();
-        
+
         if (mc.isEnabled())
         {
             MetricRegistry registry = new MetricRegistry();
             new MetricsPlugin(registry)
                     .register(server);
-            
+
             if (mc.isGraphiteEnabled())
             {
                 final Graphite graphite = new Graphite(new InetSocketAddress(mc.getGraphiteHost(), mc.getGraphitePort()));
@@ -254,7 +254,7 @@ public class Main
             logger.warn("*** Metrics Generation is Disabled ***");
         }
     }
-    
+
     private static void mapExceptions(RestExpress server)
     {
         server
@@ -263,7 +263,7 @@ public class Main
                 .mapException(ValidationException.class, BadRequestException.class)
                 .mapException(InvalidObjectIdException.class, BadRequestException.class);
     }
-    
+
     private static Configuration loadEnvironment(String[] args)
             throws FileNotFoundException, IOException
     {
@@ -283,7 +283,7 @@ public class Main
         }
         return Environment.fromDefault(Configuration.class);
     }
-    
+
     private static Properties fetchPropertiesFromServer(String url)
     {
         Properties properties = new Properties();
